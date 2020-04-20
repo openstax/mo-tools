@@ -20,7 +20,6 @@ smoke = mark.smoke
 
 webview = mark.webview
 legacy = mark.legacy
-neb = mark.neb
 rex = mark.rex
 awss3 = mark.awss3
 archive = mark.archive

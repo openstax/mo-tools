@@ -19,7 +19,6 @@ pytest_plugins = (
     "fixtures.archive",
     "fixtures.webview",
     "fixtures.legacy",
-    "fixtures.neb",
 )
 
 
@@ -32,7 +31,6 @@ def get_custom_markers():
         "smoke: mark tests used for smoke testing",
         "webview: mark tests that target cnx.org",
         "legacy: mark tests that are for legacy",
-        "neb: mark tests that use the neb cli",
         "rex: mark tests that are REX specific",
         "visual: mark tests that use applitools and screenshots",
         "requires_publishing: mark tests that require publishing being deployed",
@@ -141,10 +139,6 @@ def pytest_addoption(parser):
     )
     parser.addoption(
         "--legacy_password", default=os.getenv("LEGACY_PASSWORD"), help="password for CNX legacy."
-    )
-    parser.addini("neb_env", help="environment name for Neb.")
-    parser.addoption(
-        "--neb_env", default=os.getenv("NEB_ENV", None), help="environment name for Neb."
     )
 
 
