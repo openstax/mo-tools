@@ -15,3 +15,5 @@ Assuming you've got NPM installed
 From the root folder
 
 ``artillery run [DIR TO YML CONFIG FILE]``
+
+# end
