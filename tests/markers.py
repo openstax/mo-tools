@@ -18,7 +18,6 @@ slow = mark.slow
 smoke = mark.smoke
 
 webview = mark.webview
-legacy = mark.legacy
 awss3 = mark.awss3
 archive = mark.archive
 

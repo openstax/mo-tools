@@ -18,7 +18,6 @@ pytest_plugins = (
     "fixtures.snapshot",
     "fixtures.archive",
     "fixtures.webview",
-    "fixtures.legacy",
 )
 
 
@@ -30,7 +29,6 @@ def get_custom_markers():
         "slow: mark tests that are slow",
         "smoke: mark tests used for smoke testing",
         "webview: mark tests that target cnx.org",
-        "legacy: mark tests that are for legacy",
         "rex: mark tests that are REX specific",
         "visual: mark tests that use applitools and screenshots",
         "requires_publishing: mark tests that require publishing being deployed",
@@ -98,13 +96,6 @@ def pytest_addoption(parser):
         default=os.getenv("ARCHIVE_BASE_URL", None),
         help="base url for CNX archive.",
     )
-    parser.addini("legacy_base_url", help="base url for CNX legacy.")
-    parser.addoption(
-        "--legacy_base_url",
-        metavar="url",
-        default=os.getenv("LEGACY_BASE_URL", None),
-        help="base url for CNX legacy.",
-    )
     parser.addini("webview_base_url", help="base url for CNX webview.")
     parser.addoption(
         "--webview_base_url",
@@ -125,12 +116,6 @@ def pytest_addoption(parser):
         metavar="url",
         default=os.getenv("S3_BASE_URL", None),
         help="base url for cnx books in aws s3 bucket.",
-    )
-    parser.addoption(
-        "--legacy_username", default=os.getenv("LEGACY_USERNAME"), help="username for CNX legacy."
-    )
-    parser.addoption(
-        "--legacy_password", default=os.getenv("LEGACY_PASSWORD"), help="password for CNX legacy."
     )
 
 
