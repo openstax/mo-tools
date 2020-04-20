@@ -13,19 +13,6 @@ DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data", "we
 
 
 @pytest.fixture
-def robots_txt_production():
-    """Returns the text file location which includes all the robots.txt lines for production env
-    """
-    data_file = DATA_DIR + "/robots.prod.txt"
-
-    with open(data_file, "r") as infile:
-
-        data = infile.read()
-
-    return data.strip()
-
-
-@pytest.fixture
 def webview_base_url(request):
     """Return a base URL for CNX webview"""
     config = request.config

@@ -8,10 +8,6 @@ services:
       - PRINT_PAGE_SOURCE_ON_FAILURE
       - RUNSLOW
       - ARCHIVE_BASE_URL
-      - LEGACY_BASE_URL
-      - LEGACY_USERNAME
-      - LEGACY_PASSWORD
-      - NEB_ENV
       - WEBVIEW_BASE_URL
     build: .
     volumes:
