@@ -37,7 +37,6 @@ def get_custom_markers():
         "requires_varnish_routing: mark tests that require varnish routing",
         "requires_complete_dataset: mark tests that require the complete dataset",
         "requires_deployment: mark tests that require deployment",
-        "vendor: mark tests that target vendor.cnx.org",
         "awss3: mark tests that target collections in aws s3 bucket",
         "archive: mark tests that target archive",
     )
@@ -119,13 +118,6 @@ def pytest_addoption(parser):
         metavar="url",
         default=os.getenv("REX_BASE_URL", None),
         help="base url for REX.",
-    )
-    parser.addini("vendor_base_url", help="base url for Vendor cnx books.")
-    parser.addoption(
-        "--vendor_base_url",
-        metavar="url",
-        default=os.getenv("VENDOR_BASE_URL", None),
-        help="base url for Vendor cnx books.",
     )
     parser.addini("s3_base_url", help="base url for cnx books in aws s3 bucket.")
     parser.addoption(
