@@ -9,7 +9,7 @@ import tldextract
 
 from tests.utils import gen_from_file, skip_if_destructive_and_sensitive
 
-DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data", "webview")
+DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data", "cops")
 
 
 @pytest.fixture
