@@ -22,7 +22,7 @@ import os
 """
 End to end test of cops(-staging).openstax.org
 Creates jobs for 2 collections, verifies that they were successfully executed and pdf is created with content
-Latest update on 25/03/2020
+Latest update on 21/04/2020
 """
 
 
@@ -73,16 +73,14 @@ def test_create_cops_jobs(
 
 def test_verify_cops_jobs(selenium, cops_api_url):
 
-    # 20 minutes wait time before process times out
+    # 25 minutes wait time before process times out
     start_time = time.time()
-    wait_time = 1200
+    wait_time = 1500
 
     while True:
 
         if time.time() > start_time + wait_time:
-            pytest.exit(
-                "!!!!! ONE OF THE TWO JOBS FAILED. PROCESS TIMED OUT AFTER 20 MINUTES !!!!!"
-            )
+            pytest.exit("!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 25 MINUTES !!!!!")
 
         api_page = urllib.request.urlopen(cops_api_url).read()
 
@@ -103,34 +101,29 @@ def test_verify_cops_jobs(selenium, cops_api_url):
         pdf_url1 = newest1["pdf_url"]
         job_status1 = newest1["status"]["name"]
 
-        for i, j in [(job_status0, job_status1)]:
+        if job_status0 == "failed" and job_status1 == "failed":
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
-            if i == "completed" and j == "completed":
-                assert collection_id0 == "col11496"
-                assert collection_id0 in pdf_url0
-                assert job_status0 == "completed"
+        if job_status0 == "failed" and job_status1 == "completed":
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
-                assert collection_id1 == "col24361"
-                assert collection_id1 in pdf_url1
-                assert job_status1 == "completed"
+        if job_status0 == "completed" and job_status1 == "failed":
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
-                print(f"\nCOPS JOBS '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
-                break
+        if job_status0 == "completed" and job_status1 == "completed":
+            assert collection_id0 == "col11496"
+            assert collection_id0 in pdf_url0
+            assert job_status0 == "completed"
 
-            elif i == "failed" and j == "failed":
-                pytest.exit(f"\nJOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
+            assert collection_id1 == "col24361"
+            assert collection_id1 in pdf_url1
+            assert job_status1 == "completed"
 
-            elif (i == "queued" or i == "assigned" or i == "processing") and (
-                j == "queued" or j == "assigned" or j == "processing"
-            ):
-                continue
+            print(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
+            break
 
-        else:
-            continue
-
-        pytest.exit(
-            f"\nSOMETHING WENT WRONG: '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}"
-        )
+        sleep(30)
+        continue
 
 
 def test_verify_cops_pdf(selenium, cops_base_url, cops_api_url):
