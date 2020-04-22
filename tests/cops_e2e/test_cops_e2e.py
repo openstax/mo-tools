@@ -1,5 +1,4 @@
 import requests
-from tests import markers
 from selenium.webdriver.common.keys import Keys
 
 import pytest
@@ -22,11 +21,12 @@ import os
 """
 End to end test of cops(-staging).openstax.org
 Creates jobs for 2 collections, verifies that they were successfully executed and pdf is created with content
-Latest update on 21/04/2020
+Latest update on 22/04/2020
 """
 
 
-@markers.parametrize(
+@pytest.mark.copse2e
+@pytest.mark.parametrize(
     "colid, ver, style, bserver",
     [("col24361", "latest", "biology", "qa"), ("col11496", "1.17", "anatomy", "staging")],
 )
