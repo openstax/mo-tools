@@ -16,6 +16,7 @@ pytest_plugins = (
     "fixtures.archive",
     "fixtures.cops",
     "fixtures.webview",
+    "fixtures.applitools",
 )
 
 
@@ -77,6 +78,11 @@ def pytest_addoption(parser):
         help="OAuth token used to login to GitHub.",
     )
     parser.addoption(
+        "--applitools-key",
+        default=os.getenv("APPLITOOLS_API_KEY", None),
+        help="OAuth key used to login to Applitools.",
+    )
+    parser.addoption(
         "--runslow",
         action="store_true",
         default=os.getenv("RUNSLOW", False),
@@ -91,11 +97,27 @@ def pytest_addoption(parser):
         default=os.getenv("ARCHIVE_BASE_URL", None),
         help="base url for CNX archive.",
     )
+    # Adapted from:
+    # https://github.com/pytest-dev/pytest-base-url/blob/master/pytest_base_url/plugin.py#L51
+    parser.addini("archive2_base_url", help="base url for CNX archive.")
+    parser.addoption(
+        "--archive2_base_url",
+        metavar="url",
+        default=os.getenv("ARCHIVE2_BASE_URL", None),
+        help="base url for CNX archive.",
+    )
     parser.addini("webview_base_url", help="base url for CNX webview.")
     parser.addoption(
         "--webview_base_url",
         metavar="url",
         default=os.getenv("WEBVIEW_BASE_URL", None),
+        help="base url for CNX webview.",
+    )
+    parser.addini("webview2_base_url", help="base url for CNX webview.")
+    parser.addoption(
+        "--webview2_base_url",
+        metavar="url",
+        default=os.getenv("WEBVIEW2_BASE_URL", None),
         help="base url for CNX webview.",
     )
     parser.addini("rex_base_url", help="base url for REX.")

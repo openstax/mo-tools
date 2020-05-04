@@ -5,6 +5,8 @@
 import os
 import pytest
 
+import tldextract
+
 from tests.utils import gen_from_file, skip_if_destructive_and_sensitive
 
 DATA_DIR = os.path.join(os.path.realpath(os.path.dirname(__file__)), "data", "webview")
@@ -15,6 +17,26 @@ def webview_base_url(request):
     """Return a base URL for CNX webview"""
     config = request.config
     base_url = config.getoption("webview_base_url") or config.getini("webview_base_url")
+    if base_url is not None:
+        skip_if_destructive_and_sensitive(request, base_url)
+        return base_url
+
+
+@pytest.fixture
+def webview2_base_url(request):
+    """Return a base URL for CNX webview"""
+    config = request.config
+    base_url = config.getoption("webview2_base_url") or config.getini("webview2_base_url")
+    if base_url is not None:
+        skip_if_destructive_and_sensitive(request, base_url)
+        return base_url
+
+
+@pytest.fixture
+def archive2_base_url(request):
+    """Return a base URL for CNX webview"""
+    config = request.config
+    base_url = config.getoption("archive2_base_url") or config.getini("archive2_base_url")
     if base_url is not None:
         skip_if_destructive_and_sensitive(request, base_url)
         return base_url
@@ -45,3 +67,12 @@ def vendor_base_url(request):
     if base_url is not None:
         skip_if_destructive_and_sensitive(request, base_url)
         return base_url
+
+
+@pytest.fixture
+def webview_instance(webview_base_url):
+    url = tldextract.extract(webview_base_url)
+    if url.subdomain:
+        return url.subdomain
+    else:
+        return "prod"
