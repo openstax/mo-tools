@@ -38,5 +38,5 @@ def test_openstax_book_versions(webview_base_url, archive_base_url, selenium):
             print("\nLatest version of " f"'{book_title} ({book_id})'" ": ", version)
 
         except HTTPError:
-            print("---http error occurred---")
+            print(f">>>>>>>>> http error occurred at {url}")
             continue
