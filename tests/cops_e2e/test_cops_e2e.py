@@ -75,12 +75,14 @@ def test_verify_cops_jobs(selenium, cops_api_url):
 
     # 25 minutes wait time before process times out
     start_time = time.time()
-    wait_time = 1500
+    wait_time = 2000
 
     while True:
 
         if time.time() > start_time + wait_time:
-            pytest.exit("!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 25 MINUTES !!!!!")
+            pytest.exit(
+                "!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 33.33333 MINUTES !!!!!"
+            )
 
         api_page = urllib.request.urlopen(cops_api_url).read()
 
