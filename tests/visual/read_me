@@ -1,0 +1,2 @@
+applitools.py is fixture for home_applitools.py test
+if wanting to use applitools, it should go to fixtures folder
