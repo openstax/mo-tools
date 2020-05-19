@@ -16,8 +16,8 @@ pytest_plugins = (
     "fixtures.archive",
     "fixtures.cops",
     "fixtures.webview",
-    "fixtures.applitools",
 )
+# "fixtures.applitools",
 
 
 def get_custom_markers():
@@ -77,11 +77,11 @@ def pytest_addoption(parser):
         default=os.getenv("GITHUB_TOKEN", None),
         help="OAuth token used to login to GitHub.",
     )
-    parser.addoption(
-        "--applitools-key",
-        default=os.getenv("APPLITOOLS_API_KEY", None),
-        help="OAuth key used to login to Applitools.",
-    )
+    # parser.addoption(
+    #     "--applitools-key",
+    #     default=os.getenv("APPLITOOLS_API_KEY", None),
+    #     help="OAuth key used to login to Applitools.",
+    # )
     parser.addoption(
         "--runslow",
         action="store_true",
