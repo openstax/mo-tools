@@ -3,10 +3,11 @@ from pages.webview.home import Home
 from urllib.request import urlopen
 import json
 import urllib
+from urllib.error import HTTPError
 
 """
 Gets the latest versions of all openstax collections (cnx.org)
-Latest update on 27/01/2020
+Latest update on 19/05/2020
 """
 
 
@@ -17,19 +18,25 @@ def test_openstax_book_versions(webview_base_url, archive_base_url, selenium):
 
     for cnx_book in home.featured_books.openstax_list:
 
-        book_title = cnx_book.title
-        book_id = cnx_book.cnx_id
-        print(book_id)
-        url = f"{archive_base_url}" + "/contents/" + f"{book_id}" + ".json"
+        try:
 
-        page = urllib.request.urlopen(url).read()
-        jdata = json.loads(page)
+            book_title = cnx_book.title
+            book_id = cnx_book.cnx_id
 
-        raw_ver = {v for k, v in jdata.items() if k == "version"}
+            url = f"{archive_base_url}" + "/contents/" + f"{book_id}" + ".json"
 
-        version = str(raw_ver)[2:-2]
+            page = urllib.request.urlopen(url).read()
+            jdata = json.loads(page)
 
-        ver = {}
-        ver[book_title] = version
+            raw_ver = {v for k, v in jdata.items() if k == "version"}
 
-        print("\nLatest " f"'{book_title}'" " version: ", version)
+            version = str(raw_ver)[2:-2]
+
+            ver = {}
+            ver[book_title] = version
+
+            print("\nLatest version of " f"'{book_title} ({book_id})'" ": ", version)
+
+        except HTTPError:
+            print("---http error occurred---")
+            continue

@@ -6,13 +6,12 @@ image_resource:
     repository: dwdraju/alpine-curl-jq
     tag: latest
 inputs:
-  - name: cnx-automation
+  - name: mo-tools
   - name: history-txt
 outputs:
   - name: circleci-output
 run:
   path: bash
-  args: ["cnx-automation/.concourse/tasks/test-webview-ui-circleci/script.bash"]
+  args: ["mo-tools/.concourse/tasks/test-mo-tools-circleci/script.bash"]
 params:
   CIRCLE_API_TOKEN: ((circleci-api-token))
-
