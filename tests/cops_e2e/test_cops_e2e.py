@@ -15,8 +15,9 @@ import time
 from time import sleep
 from tkinter import Tk, Button
 
-import PyPDF2
+from PyPDF2 import PdfFileReader
 import os
+
 
 """
 End to end test of cops(-staging).openstax.org
@@ -75,14 +76,12 @@ def test_verify_cops_jobs(selenium, cops_api_url):
 
     # 25 minutes wait time before process times out
     start_time = time.time()
-    wait_time = 2000
+    wait_time = 3600
 
     while True:
 
         if time.time() > start_time + wait_time:
-            pytest.exit(
-                "!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 33.33333 MINUTES !!!!!"
-            )
+            pytest.exit("!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 60 MINUTES !!!!!")
 
         api_page = urllib.request.urlopen(cops_api_url).read()
 
@@ -124,7 +123,6 @@ def test_verify_cops_jobs(selenium, cops_api_url):
             print(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
             break
 
-        sleep(30)
         continue
 
 
@@ -134,6 +132,10 @@ def test_verify_cops_pdf(selenium, cops_base_url, cops_api_url):
     api_jdata = json.loads(api_page)
     newest0 = api_jdata[0]
     pdf_url0 = newest0["pdf_url"]
+    id0 = newest0["id"]
+    collection_id0 = newest0["collection_id"]
+    collection_version0 = newest0["version"]
+    collection_server0 = newest0["content_server"]["name"]
 
     if pdf_url0 is None:
         pytest.exit(">>>> PDF LINK IS MISSING <<<<")
@@ -158,18 +160,27 @@ def test_verify_cops_pdf(selenium, cops_base_url, cops_api_url):
 
         sleep(2)
 
-        pdf_file = open("collection_pdf_document.pdf", "rb")
-        read_pdf = PyPDF2.PdfFileReader(pdf_file)
-        number_of_pages = read_pdf.getNumPages()
+        pdf_file = PdfFileReader(open("collection_pdf_document.pdf", "rb"))
+        number_of_pages = pdf_file.getNumPages()
 
-        pdf_page = read_pdf.getPage(0)
+        pdf_page = pdf_file.getPage(0)
         pdf_page_content = pdf_page.extractText()
+
+        urless = "".join((url_pdf.split("http")[0], "", url_pdf.split(".com/")[1]))
 
         if os.path.exists("collection_pdf_document.pdf"):
             os.remove("collection_pdf_document.pdf")
 
+        pdf_info = pdf_file.getDocumentInfo()
+        pdf_title = pdf_info.title
+
+        # verifies pdf content
         assert number_of_pages > 0
         assert "CHAPTER" in pdf_page_content
+        assert "Anatomy" in pdf_title
+
+        # verifies pdf file name
+        assert f"{collection_id0}-{collection_version0}-{collection_server0}-{id0}.pdf" == urless
 
         root.destroy()
         root.mainloop()
