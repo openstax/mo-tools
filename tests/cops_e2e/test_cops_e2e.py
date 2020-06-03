@@ -27,10 +27,10 @@ Latest update on 22/04/2020
 @pytest.mark.smoke
 @pytest.mark.ui
 @pytest.mark.nondestructive
-@pytest.mark.parametrize("colid", ["col11992"], ["col11496"])
-@pytest.mark.parametrize("vers", ["latest"], ["1.17"])
-@pytest.mark.parametrize("style", ["astronomy"], ["anatomy"])
-@pytest.mark.parametrize("serv", ["staging"], ["qa"])
+@pytest.mark.parametrize(
+    "colid, vers, style, serv",
+    [("col24361", "latest", "biology", "qa"), ("col11496", "1.17", "anatomy", "staging")],
+)
 def test_create_cops_jobs(selenium, cops_base_url, colid, vers, style, serv):
 
     # GIVEN: Selenium driver and the base url
@@ -180,7 +180,7 @@ def test_verify_cops_pdf(selenium, cops_base_url, cops_api_url):
         # verifies pdf content
         assert number_of_pages > 0
         assert "CHAPTER" in pdf_page_content
-        assert "Astronomy" in pdf_title
+        assert "Anatomy" in pdf_title
 
         # verifies pdf file name
         assert f"{collection_id0}-{collection_version0}-{collection_server0}-{id0}.pdf" == urless
