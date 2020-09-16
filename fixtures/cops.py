@@ -140,3 +140,16 @@ def new_cops_job1(cops_json_data):
 def new_cops_job_id1(new_cops_job1):
     job_id1 = new_cops_job1["id"]
     return job_id1
+
+
+# @pytest.fixture
+# def latest_job_json_data_for_pdf_verification(cops_api_url):
+#     api_page = urllib.request.urlopen(cops_api_url).read()
+#     api_jdata = json.loads(api_page)
+
+#     newest0 = api_jdata[0]
+#     pdf_url0 = newest0["pdf_url"]
+#     id0 = newest0["id"]
+#     collection_id0 = newest0["collection_id"]
+#     collection_version0 = newest0["version"]
+#     collection_server0 = newest0["content_server"]["name"]
