@@ -99,6 +99,7 @@ class Home(Page):
             return self
 
         def fill_collection_id_field(self, value):
+            self.driver.find_element_by_tag_name("body").send_keys(Keys.TAB)
             self.driver.find_element_by_tag_name("body").send_keys(Keys.TAB, value)
             return self
 

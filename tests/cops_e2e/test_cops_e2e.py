@@ -20,7 +20,7 @@ from pages.cops.home import Home
 """
 End to end test of cops(-staging).openstax.org
 Creates jobs for 2 collections, verifies that they were successfully executed and pdf is created with content
-Latest update on 22/04/2020
+Latest update on 03/06/2020
 """
 
 
@@ -60,6 +60,7 @@ def test_create_cops_jobs(selenium, cops_base_url, colid, vers, style, serv):
 
         # AND: Data is entered into the four fields
         modal.fill_collection_id_field(colid)
+
         modal.fill_version_field(vers)
         modal.fill_style_field(style)
         modal.fill_server_field(serv)
@@ -76,9 +77,7 @@ def test_create_cops_jobs(selenium, cops_base_url, colid, vers, style, serv):
         assert response.status_code == 200
 
 
-def test_verify_cops_jobs(
-    selenium, new_cops_job0, new_cops_job_id0, new_cops_job1, new_cops_job_id1
-):
+def test_verify_cops_jobs(selenium, cops_api_url):
 
     # 60 minutes wait time before process times out
     start_time = time.time()
@@ -89,28 +88,31 @@ def test_verify_cops_jobs(
         if time.time() > start_time + wait_time:
             pytest.exit("!!!!! SOMETHING WENT WRONG. PROCESS TIMED OUT AFTER 60 MINUTES !!!!!")
 
-        collection_id0 = new_cops_job0["collection_id"]
-        pdf_url0 = new_cops_job0["pdf_url"]
-        job_status0 = new_cops_job0["status"]["name"]
+        api_page = urllib.request.urlopen(cops_api_url).read()
 
-        collection_id1 = new_cops_job1["collection_id"]
-        pdf_url1 = new_cops_job1["pdf_url"]
-        job_status1 = new_cops_job1["status"]["name"]
+        # loading cops json file and extracting required data
+        api_jdata = json.loads(api_page)
+
+        newest0 = api_jdata[0]
+        job_id0 = newest0["id"]
+        collection_id0 = newest0["collection_id"]
+        pdf_url0 = newest0["pdf_url"]
+        job_status0 = newest0["status"]["name"]
+
+        newest1 = api_jdata[1]
+        job_id1 = newest1["id"]
+        collection_id1 = newest1["collection_id"]
+        pdf_url1 = newest1["pdf_url"]
+        job_status1 = newest1["status"]["name"]
 
         if job_status0 == "failed" and job_status1 == "failed":
-            pytest.exit(
-                f"COPS JOB '{new_cops_job_id0}' {job_status0} AND '{new_cops_job_id1}' {job_status1}"
-            )
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
         if job_status0 == "failed" and job_status1 == "completed":
-            pytest.exit(
-                f"COPS JOB '{new_cops_job_id0}' {job_status0} AND '{new_cops_job_id1}' {job_status1}"
-            )
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
         if job_status0 == "completed" and job_status1 == "failed":
-            pytest.exit(
-                f"COPS JOB '{new_cops_job_id0}' {job_status0} AND '{new_cops_job_id1}' {job_status1}"
-            )
+            pytest.exit(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
 
         if job_status0 == "completed" and job_status1 == "completed":
             assert collection_id0 == "col11496"
@@ -121,18 +123,18 @@ def test_verify_cops_jobs(
             assert collection_id1 in pdf_url1
             assert job_status1 == "completed"
 
-            print(
-                f"COPS JOB '{new_cops_job_id0}' {job_status0} AND '{new_cops_job_id0}' {job_status1}"
-            )
+            print(f"COPS JOB '{job_id0}' {job_status0} AND '{job_id1}' {job_status1}")
             break
 
         continue
 
 
+@pytest.mark.test_case("C606121")
 def test_verify_cops_pdf(selenium, cops_base_url, cops_api_url):
 
     api_page = urllib.request.urlopen(cops_api_url).read()
     api_jdata = json.loads(api_page)
+
     newest0 = api_jdata[0]
     pdf_url0 = newest0["pdf_url"]
     id0 = newest0["id"]
