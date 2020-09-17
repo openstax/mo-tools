@@ -89,6 +89,10 @@ class Home(Page):
             "#app > div.v-dialog__content.v-dialog__content--active > div > div > div.v-card__actions > "
             "button:nth-child(3) > span ",
         )
+        _modal_distribution_preview_radio_button_locator = (
+            By.XPATH,
+            "/html/body/div/div/div/div[3]/div/div/div[2]/div/form/div[1]/div/div/div[1]/div/div[2]/div/div",
+        )
 
         def click_cancel_button(self):
             self.find_element(*self._modal_cancel_button_locator).click()
@@ -96,6 +100,14 @@ class Home(Page):
 
         def click_create_button(self):
             self.find_element(*self._modal_create_button_locator).click()
+            return self
+
+        def click_distribution_preview_radio_button(self):
+            self.find_element(*self._modal_distribution_preview_radio_button_locator).click()
+            return self
+
+        def fill_collection_id_field_preview(self, value):
+            self.driver.find_element_by_tag_name("body").send_keys(Keys.TAB, value)
             return self
 
         def fill_collection_id_field(self, value):
